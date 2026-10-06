@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# leon-sessions — widget de barra: sesiones de Leon tocadas en 24 h.
+# Lee ~/.local/share/leon/leon.db (solo lectura) y pinta JSON para el
+# módulo command de la barra. Click → abre o enfoca Leon.
+set -euo pipefail
+
+db="${XDG_DATA_HOME:-$HOME/.local/share}/leon/leon.db"
+if [[ ! -f $db ]]; then
+  printf '{"text":"Leon —","tooltip":"Leon: sin base de datos todavía"}\n'
+  exit 0
+fi
+
+now_ms=$(date +%s%3N)
+day_ago=$((now_ms - 86400000))
+row=$(sqlite3 -readonly "$db" "SELECT COUNT(*), SUM(CASE WHEN updated_at >= $day_ago THEN 1 ELSE 0 END) FROM session;" 2>/dev/null || echo "0|0")
+total=${row%%|*}
+today=${row##*|}
+total=${total:-0}
+today=${today:-0}
+agents=$(sqlite3 -readonly "$db" "SELECT agent || ': ' || COUNT(*) FROM session WHERE updated_at >= $day_ago GROUP BY agent;" 2>/dev/null | paste -sd'  ·  ' -)
+[[ -z $agents ]] && agents="sin actividad en 24 h"
+
+printf '{"text":"\U0001F981 %s","tooltip":"Leon — %s sesiones en 24 h (%s) · %s en total"}\n' \
+  "$today" "$today" "$agents" "$total"

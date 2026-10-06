@@ -1,0 +1,44 @@
+# Leon — Dark theme for Omarchy.
+# Derived from Leon brand tokens (brand/tokens.md) and crates/app/src/theme/leon.rs.
+# Stone neutrals on near-black, one acid-yellow signal (#FFEA00) spent only on
+# focus/selection/active, orange warning so yellow text is never mistaken for
+# the cursor. ANSI red/green/yellow/cyan are the four state colours.
+
+mode = "dark"
+
+# Signal — acid yellow. Text selection is the accent fill with ink on it (16:1).
+accent = "#FFEA00"
+selection = "#262626"
+muted = "#A8A29E"
+
+# Page: near-black, surfaces raised from it.
+background = "#0A0A0A"
+dark_background = "#0A0A0A"
+darker_background = "#060606"
+lighter_background = "#141414"
+
+# Type: page text, faint for dimmed, muted for secondary.
+foreground = "#FAFAF9"
+dark_foreground = "#8C8580"
+light_foreground = "#A8A29E"
+bright_foreground = "#FAFAF9"
+
+# States. Yellow IS the warning orange: yellow terminal text never Alloys with the cursor.
+red = "#FF5E5E"
+yellow = "#FF9500"
+orange = "#FFB340"
+green = "#4DF688"
+cyan = "#6EFAFF"
+blue = "#7AA2FF"
+magenta = "#C792FF"
+brown = "#8C8580"
+
+bright_red = "#FF8A8A"
+bright_yellow = "#FFB340"
+bright_green = "#86FFAD"
+bright_cyan = "#A5FCFF"
+bright_blue = "#A5C0FF"
+bright_magenta = "#DDB8FF"
+
+selection_background = "#FFEA00"
+selection_foreground = "#0A0A0A"

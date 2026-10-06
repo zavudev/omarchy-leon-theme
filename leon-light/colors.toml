@@ -1,0 +1,38 @@
+# Leon — Light theme for Omarchy.
+# Paper background, ink text, dark olive-yellow signal (#756600, 5.5:1 on paper).
+# The fill stays acid yellow carrying ink, same as the app.
+
+mode = "light"
+
+accent = "#756600"
+selection = "#E7E5E4"
+muted = "#57534E"
+
+background = "#FAFAF9"
+dark_background = "#F5F5F4"
+darker_background = "#E7E5E4"
+lighter_background = "#FFFFFF"
+
+foreground = "#0C0A09"
+dark_foreground = "#78716C"
+light_foreground = "#57534E"
+bright_foreground = "#0C0A09"
+
+red = "#B91C1C"
+yellow = "#A06000"
+orange = "#8A5200"
+green = "#047857"
+cyan = "#0E7490"
+blue = "#1D4ED8"
+magenta = "#7E22CE"
+brown = "#57534E"
+
+bright_red = "#9F1239"
+bright_yellow = "#8A5200"
+bright_green = "#156B34"
+bright_cyan = "#0B5E75"
+bright_blue = "#1E40AF"
+bright_magenta = "#6B21A8"
+
+selection_background = "#FFEA00"
+selection_foreground = "#0A0A0A"

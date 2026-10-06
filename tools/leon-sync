@@ -1,0 +1,124 @@
+#!/bin/bash
+# leon-sync — hook theme-set: regenera el tema "Omarchy" de Leon con la
+# paleta del tema Omarchy recién aplicado.
+#
+# Lee $HOME/.local/state/omarchy/current/theme/colors.toml y escribe
+# ~/.local/share/leon/themes/omarchy.toml (id "omarchy", extends "leon"):
+# solo la sección de la apariencia activa ([dark] o [light]); la otra se
+# conserva del fichero anterior. Leon lo recarga solo (~1 s).
+#
+# Instalar con: omarchy hook install theme-set /ruta/a/leon-sync
+# Probar sin cambiar de tema: omarchy-hook theme-set "$(cat ~/.local/state/omarchy/current/theme.name)"
+set -euo pipefail
+
+SRC="$HOME/.local/state/omarchy/current/theme/colors.toml"
+DEST_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/leon/themes"
+DEST="$DEST_DIR/omarchy.toml"
+
+[[ -f $SRC ]] || exit 0
+mkdir -p -- "$DEST_DIR"
+
+python3 - "$SRC" "$DEST" <<'EOF'
+import re, sys
+
+src, dest = sys.argv[1], sys.argv[2]
+colors = {}
+mode = "dark"
+for line in open(src):
+    m = re.match(r'\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*"(#[0-9a-fA-F]{6}|dark|light)"', line)
+    if not m:
+        continue
+    k, v = m.group(1), m.group(2)
+    if k == "mode":
+        mode = v
+    else:
+        colors[k] = v.upper()
+
+section = "light" if mode == "light" else "dark"
+g = colors.get
+
+
+def lum(hex6):
+    r, gg, b = (int(hex6[i : i + 2], 16) / 255 for i in (1, 3, 5))
+
+    def f(c):
+        return c / 12.92 if c <= 0.03928 else ((c + 0.055) / 1.055) ** 2.4
+
+    return 0.2126 * f(r) + 0.7152 * f(gg) + 0.0722 * f(b)
+
+
+def contrast(a, b):
+    la, lb = lum(a), lum(b)
+    return (max(la, lb) + 0.05) / (min(la, lb) + 0.05)
+
+
+def pick(cands, minimum):
+    cands = [c for c in cands if c]
+    ok = [c for c in cands if contrast(c, g("background")) >= minimum]
+    return ok[0] if ok else max(cands, key=lambda c: contrast(c, g("background")))
+
+
+# Leon exige contraste mínimo en la página: negro ANSI >= 1.2, negro
+# brillante >= 2.0 (por debajo es error; el aviso es aceptable). El negro
+# "normal" de Omarchy es el propio fondo (1.0), así que se usa el gris de
+# superficie; se prefiere el tono con semántica de negro aunque avise.
+black = pick([g("selection"), g("lighter_background"), g("muted"), g("dark_foreground")], 1.2)
+bright_black = pick([g("muted"), g("dark_foreground"), g("light_foreground")], 2.0)
+ansi = [
+    black, g("red"), g("green"), g("yellow"), g("blue"),
+    g("magenta"), g("cyan"), g("foreground"), bright_black,
+    g("bright_red"), g("bright_green"), g("bright_yellow"),
+    g("bright_blue"), g("bright_magenta"), g("bright_cyan"),
+    g("bright_foreground"),
+]
+tokens = {
+    "background": g("background"),
+    "surface": g("lighter_background"),
+    "surface_2": g("selection"),
+    "border": g("selection"),
+    "grid_mark": g("dark_foreground"),
+    "guide": g("dark_foreground"),
+    "text": g("foreground"),
+    "text_muted": g("muted"),
+    "text_faint": g("dark_foreground"),
+    "accent": g("accent"),
+    "success": g("green"),
+    "warning": g("yellow"),
+    "error": g("red"),
+    "info": g("cyan"),
+}
+if any(v is None for v in list(tokens.values()) + ansi):
+    missing = [k for k, v in tokens.items() if v is None]
+    sys.exit(f"leon-sync: colors.toml sin claves: {missing}")
+
+other = "light" if section == "dark" else "dark"
+kept = []
+if __import__("os").path.exists(dest):
+    cur = None
+    for line in open(dest):
+        s = line.strip()
+        if s == f"[{other}]":
+            cur = other
+        elif s.startswith("["):
+            cur = None
+        if cur == other:
+            kept.append(line.rstrip("\n"))
+
+out = [
+    "# Tema Omarchy de Leon — generado por leon-sync, no editar.",
+    "# Se regenera en cada `omarchy theme set`.",
+    'id = "omarchy"',
+    'name = "Omarchy"',
+    'extends = "leon"',
+    "",
+    f"[{section}]",
+]
+out += [f"{k} = \"{v}\"" for k, v in tokens.items()]
+out += ["", f"[{section}.terminal]", "ansi = ["]
+out += [f"  \"{c}\"," for c in ansi]
+out += ["]"]
+if kept:
+    out += [""] + kept
+open(dest, "w").write("\n".join(out) + "\n")
+print(f"leon-sync: {dest} [{section}]")
+EOF

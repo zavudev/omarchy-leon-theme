@@ -1,0 +1,165 @@
+# Leon — superficies del shell de Omarchy.
+#
+# Regla de presupuesto de color (brand/tokens.md): ~85% fondo + superficie,
+# ~12% tipografía + muted, ~3% acid yellow. El amarillo ácido aparece solo donde
+# hay señal real — foco, selección, estado activo — nunca como relleno.
+#
+# near-black para el fondo del sistema; #141414 para todo lo que se eleva
+# (popups, menús, notificaciones); #262626 para los bordes hairline.
+
+[bar]
+background       = "#0A0A0A"
+background-alpha = 1.0
+text             = "#FAFAF9"
+# Módulos que reclaman atención. Es señal, no alarma: amarillo ácido, no rojo.
+active           = "#FFEA00"
+scale-with-font  = true
+size-horizontal  = 26
+size-vertical    = 28
+
+[hyprland]
+# Un solo color, sin degradado. El brand system permite un acento por
+# composición (§5.5) y el borde de la ventana activa es ese acento.
+active-border            = "#FFEA00"
+active-border-foreground = "#262626"
+
+[controls]
+# Reposo: casi invisible. El cromo no compite con el contenido.
+normal-color        = "#FAFAF9"
+normal-fill-alpha   = 0.03
+normal-border       = "#262626"
+normal-border-width = 1
+normal-border-alpha = 1.0
+
+# Hover: sube el relleno, el borde sigue siendo hairline neutro.
+hover-cursor-color        = "#FAFAF9"
+hover-cursor-fill-alpha   = 0.07
+hover-cursor-border       = "#555555"
+hover-cursor-border-width = 1
+hover-cursor-border-alpha = 1.0
+
+# Foco: aquí entra la señal. Es el único estado que gasta amarillo ácido.
+focus-color        = "#FFEA00"
+focus-fill-alpha   = 0.10
+focus-border       = "#FFEA00"
+focus-border-width = 1
+focus-border-alpha = 1.0
+
+# Seleccionado: estado persistente, amarillo ácido contenido y sin borde.
+selected-color        = "#FFEA00"
+selected-fill-alpha   = 0.16
+selected-border       = "#FFEA00"
+selected-border-width = 0
+selected-border-alpha = 1.0
+
+pressed-fill-alpha   = 0.22
+selection-fill-alpha = 0.32
+
+[spacing]
+# El espacio negativo es parte del sistema (§8.1). Un punto por encima
+# del defecto en los paddings de panel para que todo respire.
+scale = 1.0
+scale-with-font = true
+panel-padding = 20
+popup-padding = 16
+row-padding-x = 14
+
+[font]
+base-size = 12
+heading = 16
+icon-large = 18
+
+[popups]
+background       = "#141414"
+background-alpha = 1.0
+text             = "#FAFAF9"
+border           = "#262626"
+border-alpha     = 1.0
+border-width     = 1
+
+[tooltip]
+background       = "#141414"
+background-alpha = 0.98
+text             = "#FAFAF9"
+border           = "#262626"
+border-alpha     = 1.0
+border-width     = 1
+
+[notifications]
+background       = "#141414"
+background-alpha = 1.0
+text             = "#FAFAF9"
+border           = "#262626"
+border-alpha     = 1.0
+border-width     = 1
+countdown        = "#FFEA00"
+
+[launcher]
+background                = "#141414"
+background-alpha          = 1.0
+text                      = "#FAFAF9"
+border                    = "#262626"
+border-alpha              = 1.0
+border-width              = 1
+# Sin oscurecer el fondo: el lanzador es rápido y no modal.
+scrim                     = "#0A0A0A"
+scrim-alpha               = 0.0
+selected-background       = "#FFEA00"
+selected-background-alpha = 0.16
+selected-text             = "#FFEA00"
+selected-border           = "#FFEA00"
+selected-border-alpha     = 0.0
+selected-border-width     = 0
+
+[menu]
+background                = "#141414"
+background-alpha          = 1.0
+text                      = "#FAFAF9"
+border                    = "#262626"
+border-alpha              = 1.0
+border-width              = 1
+scrim                     = "#0A0A0A"
+scrim-alpha               = 0.0
+selected-background       = "#FFEA00"
+selected-background-alpha = 0.16
+selected-text             = "#FFEA00"
+selected-border           = "#FFEA00"
+selected-border-alpha     = 0.0
+selected-border-width     = 0
+
+[polkit]
+# Modal y de seguridad: aquí el scrim sí oscurece, para aislar la decisión.
+background       = "#141414"
+background-alpha = 1.0
+text             = "#FAFAF9"
+text-error       = "#FF5E5E"
+border           = "#262626"
+border-error     = "#FF5E5E"
+border-alpha     = 1.0
+border-width     = 1
+scrim            = "#0A0A0A"
+scrim-alpha      = 0.72
+accent           = "#FFEA00"
+
+[lock]
+background       = "#0A0A0A"
+background-alpha = 0.72
+text             = "#FAFAF9"
+placeholder      = "#A8A29E"
+text-error       = "#FF5E5E"
+border           = "#262626"
+border-active    = "#FFEA00"
+border-error     = "#FF5E5E"
+border-alpha     = 1.0
+border-width     = 1
+selection        = "#FFEA00"
+selection-alpha  = 0.40
+
+[image-picker]
+scrim                   = "#0A0A0A"
+scrim-alpha             = 0.72
+text                    = "#FAFAF9"
+selected-border         = "#FFEA00"
+selected-border-alpha   = 1.0
+unselected-border       = "#262626"
+unselected-border-alpha = 1.0
